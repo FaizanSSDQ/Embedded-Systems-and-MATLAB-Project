@@ -1,0 +1,13 @@
+t=linspace(0 , 720 , 360)
+y=sin((2*pi*t))
+y2=cos(2*pi*t)
+y3=sin((2*pi*t)-45)
+y4=cos((2*pi*t)+45)
+y5=tan(2*pi*t)
+plot(t , y , t, y2 , t, y3 , t , y4 , t , y5)
+title("Plotted By Faizan Saleem Siddiqui ")
+legend("sin(t)" , "cos(t)" , "sin(t-45)" , "cos(t+45)" , "tan(t)")
+xlabel("-2\pi < x < 2\pi")
+ylabel("Shifted and Scaled Waves")
+axis([-10 360 -2 2])
+grid on 
