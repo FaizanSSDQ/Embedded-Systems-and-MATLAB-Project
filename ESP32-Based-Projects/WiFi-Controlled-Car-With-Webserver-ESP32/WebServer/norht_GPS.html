@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GPS Map and Compass</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+        .map, .dial, .compass {
+            width: 30%;
+            height: 300px;
+            border: 2px solid #000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #fff;
+        }
+        .dial {
+            width: 30%;
+            height: 300px;
+        }
+        #compass {
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+        #needle {
+            position: absolute;
+            width: 2px;
+            height: 50%;
+            background-color: red;
+            transform-origin: bottom;
+            top: 0;
+            left: 50%;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="map" id="map">
+        <!-- The map will be displayed here -->
+    </div>
+    <div class="dial">
+        <!-- Your dial code goes here -->
+
+<h1>Rotate Tank</h1>
+    <div id="dialContainer">
+        <svg id="dial" viewBox="0 0 200 200">
+            <circle cx="100" cy="100" r="90" stroke="#ccc" stroke-width="1" fill="none"></circle>
+            <!-- Major degree markings -->
+            <text x="190" y="100" text-anchor="middle" alignment-baseline="middle" font-size="12">90</text>
+            <text x="100" y="10" text-anchor="middle" alignment-baseline="middle" font-size="12">0</text>
+            <text x="10" y="100" text-anchor="middle" alignment-baseline="middle" font-size="12">270</text>
+            <text x="100" y="190" text-anchor="middle" alignment-baseline="middle" font-size="12">180</text>
+            <!-- Minor degree markings -->
+            <!-- First quadrant -->
+            <text x="182" y="65" text-anchor="middle" alignment-baseline="middle" font-size="8">60</text>
+            <text x="162" y="35" text-anchor="middle" alignment-baseline="middle" font-size="8">45</text>
+            <text x="135" y="18" text-anchor="middle" alignment-baseline="middle" font-size="8">30</text>
+
+            <!-- Second quadrant -->
+            <text x="65" y="18" text-anchor="middle" alignment-baseline="middle" font-size="8">330</text>
+            <text x="35" y="35" text-anchor="middle" alignment-baseline="middle" font-size="8">315</text>
+            <text x="18" y="65" text-anchor="middle" alignment-baseline="middle" font-size="8">300</text>
+
+            <!-- Third quadrant -->
+            <text x="18" y="135" text-anchor="middle" alignment-baseline="middle" font-size="8">240</text>
+            <text x="35" y="162" text-anchor="middle" alignment-baseline="middle" font-size="8">225</text>
+            <text x="65" y="182" text-anchor="middle" alignment-baseline="middle" font-size="8">210</text>
+
+            <!-- Fourth quadrant -->
+            <text x="135" y="182" text-anchor="middle" alignment-baseline="middle" font-size="8">150</text>
+            <text x="162" y="162" text-anchor="middle" alignment-baseline="middle" font-size="8">135</text>
+            <text x="182" y="135" text-anchor="middle" alignment-baseline="middle" font-size="8">120</text>
+
+        </svg>
+        <div id="needle"></div>
+    </div>
+    <p>Rotation Angle: <span id="angleValue">0</span>°</p>
+    <button class='button rotate' onclick="sendRotation('tank1')">Rotate Tank 1</button>
+    <button class='button rotate' onclick="sendRotation('tank2')">Rotate Tank 2</button><br>
+
+
+    </div>
+    <div class="compass">
+        <div id="compass">
+            <div id="needle"></div>
+        </div>
+    </div>
+
+    <script>
+        // Function to fetch map data from the provided IP address
+        function loadMap(ipAddress) {
+            fetch(`http://${ipAddress}/map`)
+                .then(response => response.json())
+                .then(data => {
+                    const mapDiv = document.getElementById('map');
+                    // Assuming the data contains an image URL for simplicity
+                    mapDiv.innerHTML = `<img src="${data.mapUrl}" alt="Map" style="width: 100%; height: 100%;">`;
+                })
+                .catch(error => {
+                    console.error('Error fetching map data:', error);
+                });
+        }
+
+        // Function to update the compass needle based on ESP32 data
+        function updateCompass(angle) {
+            const needle = document.getElementById('needle');
+            needle.style.transform = `rotate(${angle}deg)`;
+        }
+
+        // Dummy IP address and angle for demonstration purposes
+        const ipAddress = '192.168.1.1';  // Replace with your IP address
+        const angle = 45;  // Replace with the angle value from ESP32
+
+        // Load the map and update the compass initially
+        loadMap(ipAddress);
+        updateCompass(angle);
+
+        // Polling the ESP32 for new compass data every second
+        setInterval(() => {
+            fetch(`http://${ipAddress}/compass`)
+                .then(response => response.json())
+                .then(data => {
+                    updateCompass(data.angle);
+                })
+                .catch(error => {
+                    console.error('Error fetching compass data:', error);
+                });
+        }, 1000);
+    </script>
+
+</body>
+</html>

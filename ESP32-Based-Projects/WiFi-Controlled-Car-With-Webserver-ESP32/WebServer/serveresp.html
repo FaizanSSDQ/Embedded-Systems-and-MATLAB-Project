@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+        .button {
+            padding: 15px 30px;
+            margin: 10px;
+            font-size: 20px;
+            cursor: pointer;
+            border-radius: 20px;
+        }
+        .forward { background-color: #4CAF50; color: white; }
+        .reverse { background-color: #f44336; color: white; }
+        .left { background-color: #008CBA; color: white; }
+        .right { background-color: #ff9800; color: white; }
+        .stop { background-color: #000000; color: white; }
+        .rotate { background-color: #808080; color: white; }
+        .slider { width: 80%; margin: 20px; }
+        .toggle { margin: 20px; }
+        .toggle input[type="checkbox"] {
+            display: none;
+        }
+        .toggle input[type="checkbox"] + .toggle-btn {
+            width: 50px;
+            height: 25px;
+            background-color: #ccc;
+            border-radius: 25px;
+            display: inline-block;
+            position: relative;
+            transition: background-color 0.3s ease;
+        }
+        .toggle input[type="checkbox"]:checked + .toggle-btn {
+            background-color: #4CAF50;
+        }
+        .toggle input[type="checkbox"] + .toggle-btn:before {
+            content: '';
+            position: absolute;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            background-color: white;
+            top: 0;
+            left: 0;
+            transition: left 0.3s ease;
+        }
+        .toggle input[type="checkbox"]:checked + .toggle-btn:before {
+            left: 25px;
+        }
+        #dialContainer {
+            position: relative;
+            width: 300px;
+            height: 300px;
+            margin: 20px auto;
+        }
+        #dial {
+            width: 100%;
+            height: 100%;
+        }
+        #needle {
+            position: absolute;
+            width: 2px;
+            height: 150px;
+            background-color: red;
+            top: 50%;
+            left: 50%;
+            transform-origin: bottom center;
+            transform: translate(-50%, -100%) rotate(0deg);
+        }
+        #needle:after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 0;
+            border-left: 5px solid transparent;
+            border-right: 5px solid transparent;
+            border-top: 10px solid red;
+            top: -10px;
+            left: -5px;
+        }
+        #angleValue {
+            font-size: 20px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1>Control Tank 1</h1>
+    <button class='button forward' onclick="sendCommand('tank1', 'forward')">Forward</button><br>
+    <button class='button left' onclick="sendCommand('tank1', 'left')">Left</button>
+    <button class='button right' onclick="sendCommand('tank1', 'right')">Right</button><br>
+    <button class='button reverse' onclick="sendCommand('tank1', 'reverse')">Reverse</button><br>
+    <button class='button stop' onclick="sendCommand('tank1', 'stop')">Stop</button><br>
+    <input type='range' min='0' max='255' value='255' class='slider' id='speedSlider1' oninput='setSpeed("tank1", this.value)'><br>
+    <p>Speed: <span id='speedValue1'>255</span></p>
+    <label class='toggle'>Mode: 
+        <input type='checkbox' id='modeToggle1' onchange='toggleMode("tank1", this.checked)'>
+        <span class="toggle-btn"></span>
+        <span id='modeLabel1'>Manual</span>
+    </label>
+
+    <h1>Control Tank 2</h1>
+    <button class='button forward' onclick="sendCommand('tank2', 'forward')">Forward</button><br>
+    <button class='button left' onclick="sendCommand('tank2', 'left')">Left</button>
+    <button class='button right' onclick="sendCommand('tank2', 'right')">Right</button><br>
+    <button class='button reverse' onclick="sendCommand('tank2', 'reverse')">Reverse</button><br>
+    <button class='button stop' onclick="sendCommand('tank2', 'stop')">Stop</button><br>
+    <input type='range' min='0' max='255' value='255' class='slider' id='speedSlider2' oninput='setSpeed("tank2", this.value)'><br>
+    <p>Speed: <span id='speedValue2'>255</span></p>
+    <label class='toggle'>Mode: 
+        <input type='checkbox' id='modeToggle2' onchange='toggleMode("tank2", this.checked)'>
+        <span class="toggle-btn"></span>
+        <span id='modeLabel2'>Manual</span>
+    </label>
+
+    <h1>Rotate Tank</h1>
+    <div id="dialContainer">
+        <svg id="dial" viewBox="0 0 200 200">
+            <circle cx="100" cy="100" r="90" stroke="#ccc" stroke-width="1" fill="none"></circle>
+            <!-- Major degree markings -->
+            <text x="190" y="100" text-anchor="middle" alignment-baseline="middle" font-size="12">90</text>
+            <text x="100" y="10" text-anchor="middle" alignment-baseline="middle" font-size="12">0</text>
+            <text x="10" y="100" text-anchor="middle" alignment-baseline="middle" font-size="12">270</text>
+            <text x="100" y="190" text-anchor="middle" alignment-baseline="middle" font-size="12">180</text>
+            <!-- Minor degree markings -->
+            <!-- First quadrant -->
+            <text x="182" y="65" text-anchor="middle" alignment-baseline="middle" font-size="8">60</text>
+            <text x="162" y="35" text-anchor="middle" alignment-baseline="middle" font-size="8">45</text>
+            <text x="135" y="18" text-anchor="middle" alignment-baseline="middle" font-size="8">30</text>
+
+            <!-- Second quadrant -->
+            <text x="65" y="18" text-anchor="middle" alignment-baseline="middle" font-size="8">330</text>
+            <text x="35" y="35" text-anchor="middle" alignment-baseline="middle" font-size="8">315</text>
+            <text x="18" y="65" text-anchor="middle" alignment-baseline="middle" font-size="8">300</text>
+
+            <!-- Third quadrant -->
+            <text x="18" y="135" text-anchor="middle" alignment-baseline="middle" font-size="8">240</text>
+            <text x="35" y="162" text-anchor="middle" alignment-baseline="middle" font-size="8">225</text>
+            <text x="65" y="182" text-anchor="middle" alignment-baseline="middle" font-size="8">210</text>
+
+            <!-- Fourth quadrant -->
+            <text x="135" y="182" text-anchor="middle" alignment-baseline="middle" font-size="8">150</text>
+            <text x="162" y="162" text-anchor="middle" alignment-baseline="middle" font-size="8">135</text>
+            <text x="182" y="135" text-anchor="middle" alignment-baseline="middle" font-size="8">120</text>
+
+        </svg>
+        <div id="needle"></div>
+    </div>
+    <p>Rotation Angle: <span id="angleValue">0</span>°</p>
+    <button class='button rotate' onclick="sendRotation('tank1')">Rotate Tank 1</button>
+    <button class='button rotate' onclick="sendRotation('tank2')">Rotate Tank 2</button><br>
+
+    <script>
+        const needle = document.getElementById('needle');
+        const angleValue = document.getElementById('angleValue');
+	const ipAddresses = {
+            tank1ipw: 'http://192.168.0.103/',
+            tank2ipw: 'http://192.168.43.181/',
+            tank1ipm: 'http://192.168.43.154/',
+            tank2ipm: 'http://192.168.43.181/'
+        };
+
+        document.getElementById('dialContainer').addEventListener('mousemove', function(event) {
+            const rect = this.getBoundingClientRect();
+            const x = event.clientX - rect.left;
+            const y = event.clientY - rect.top;
+            const centerX = rect.width / 2;
+            const centerY = rect.height / 2;
+            const angle = Math.atan2(y - centerY, x - centerX) * (180 / Math.PI) + 90;
+            const normalizedAngle = (angle + 360) % 360;
+
+            needle.style.transform = `translate(-50%, -100%) rotate(${normalizedAngle}deg)`;
+            angleValue.innerText = Math.round(normalizedAngle);
+        });
+
+        function sendRotation(tank) {
+            const degree = angleValue.innerText;
+            const url = 'http://' + (tank === 'tank1' ? ipAddresses.tank1ipm : ipAddresses.tank2ipm) + '/rotate?angle=' + degree;
+
+            const xhttp = new XMLHttpRequest();
+            xhttp.open('GET', url, true);
+            xhttp.send();
+        }
+
+        function sendCommand(tank, command) {
+            var url = '';
+            if (tank === 'tank1') {
+                url = ipAddresses.tank1ipm + command;
+            } else if (tank === 'tank2') {
+                url = 'http://192.168.43.181/' + command;
+            }
+        
+
+        function setSpeed(tank, speed) {
+            document.getElementById('speedValue' + (tank === 'tank1' ? '1' : '2')).innerText = speed;
+            const url = 'http://' + (tank === 'tank1' ? tank1ip : tank2ip) + '/speed?value=' + speed;
+
+            const xhttp = new XMLHttpRequest();
+            xhttp.open('GET', url, true);
+            xhttp.send();
+        }
+
+        function toggleMode(tank, isAuto) {
+            const mode = isAuto ? 'auto' : 'manual';
+            document.getElementById('modeLabel' + (tank === 'tank1' ? '1' : '2')).innerText = isAuto ? 'Auto' : 'Manual';
+            const url = 'http://' + (tank === 'tank1' ? tank1ip : tank2ip) + '/mode?value=' + mode;
+
+            const xhttp = new XMLHttpRequest();
+            xhttp.open('GET', url, true);
+            xhttp.send();
+        }
+    </script>
+</body>
+</html>

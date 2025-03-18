@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tank Control</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f0f0f0;
+        }
+        .tank-container {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 20px;
+        }
+        .tank {
+            flex: 1;
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin: 10px;
+            background-color: #fff;
+        }
+        .tank-controls {
+            margin-bottom: 20px;
+        }
+        .tank-video {
+            display: block;
+            margin: auto;
+            max-width: 100%;
+            max-height: 100%;
+            border: 1px solid #ccc;
+        }
+        .button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            margin: 5px;
+            border-radius: 5px;
+        }
+        .button:hover {
+            background-color: #ddd;
+        }
+    </style>
+</head>
+<body>
+    <div class="tank-container">
+        <!-- Tank 1 Section -->
+        <div class="tank" id="tank1">
+            <h2>Tank 1 Controls</h2>
+            <div class="tank-controls">
+                <button class="button forward" onclick="sendCommand('tank1', 'forward')">Forward</button>
+                <button class="button left" onclick="sendCommand('tank1', 'left')">Left</button>
+                <button class="button right" onclick="sendCommand('tank1', 'right')">Right</button>
+                <button class="button reverse" onclick="sendCommand('tank1', 'reverse')">Reverse</button>
+                <button class="button stop" onclick="sendCommand('tank1', 'stop')">Stop</button>
+            </div>
+            <div class="tank-video">
+                <img src="http://192.168.0.105/" width="725" height="544" alt="Tank 1 Video Stream">
+            </div>
+        </div>
+
+        <!-- Tank 2 Section -->
+        <div class="tank" id="tank2">
+            <h2>Tank 2 Controls</h2>
+            <div class="tank-controls">
+                <button class="button forward" onclick="sendCommand('tank2', 'forward')">Forward</button>
+                <button class="button left" onclick="sendCommand('tank2', 'left')">Left</button>
+                <button class="button right" onclick="sendCommand('tank2', 'right')">Right</button>
+                <button class="button reverse" onclick="sendCommand('tank2', 'reverse')">Reverse</button>
+                <button class="button stop" onclick="sendCommand('tank2', 'stop')">Stop</button>
+            </div>
+            <div class="tank-video">
+                <img src="http://192.168.0.106/" width="725" height="544" alt="Tank 2 Video Stream">
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript Section -->
+    <script>
+        function sendCommand(tank, command) {
+            // Implement your send command logic here
+            console.log(`Tank ${tank} command: ${command}`);
+        }
+        // Additional JavaScript functions and logic can be added here
+    </script>
+</body>
+</html>

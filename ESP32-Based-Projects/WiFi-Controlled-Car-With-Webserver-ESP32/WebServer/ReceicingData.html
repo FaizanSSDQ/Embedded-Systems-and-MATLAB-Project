@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>ESP32 Real-Time Message Display</title>
+    <script>
+        // Function to handle incoming Server-Sent Events
+        function setupSSE() {
+            // Replace '192.168.x.x' with your actual ESP32 IP address
+            const esp32_ip = "http://192.168.0.107";  
+            const eventSource = new EventSource(esp32_ip + '/events');  // Listen for SSE events
+
+            // When a message is received from the server, update the text box
+            eventSource.onmessage = function(event) {
+                document.getElementById("messageBox").value = event.data;  // Display the data in the text box
+                console.log("Message received: " + event.data);  // Log the data to the console
+            };
+        }
+    </script>
+</head>
+<body onload="setupSSE()">
+    <h1>ESP32 Real-Time Message Display</h1>
+    <input type="text" id="messageBox" style="width: 300px;" placeholder="Message from ESP32 will appear here">
+</body>
+</html>

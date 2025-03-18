@@ -1,0 +1,11 @@
+var url = 'http://' + (tank === 'tank1' ? '192.168.0.106' : '192.168.43.181') + '/speed?value=' + speed; 
+
+
+
+  var url;
+	    if (tank === 'tank1') {
+                url = ipAddresses.tank1ipw + 'speed?value=' + speed;
+            } else if (tank === 'tank2') {
+                url = 'http://192.168.43.181/speed?value=' + speed;
+            }
+	
