@@ -1,0 +1,11 @@
+../Core/Src/main.c:108:5:main	8	static
+../Core/Src/main.c:199:6:SystemClock_Config	72	static
+../Core/Src/main.c:238:13:MX_USART2_UART_Init	8	static
+../Core/Src/main.c:271:13:MX_GPIO_Init	40	static
+../Core/Src/main.c:318:6:StartDefaultTask	16	static
+../Core/Src/main.c:336:6:My_FirstFunction	16	static
+../Core/Src/main.c:355:6:My_SecondFunc	16	static
+../Core/Src/main.c:376:6:Transmit_Func	16	static
+../Core/Src/main.c:405:6:Receive_Func	16	static
+../Core/Src/main.c:430:6:HAL_TIM_PeriodElapsedCallback	16	static
+../Core/Src/main.c:447:6:Error_Handler	4	static,ignoring_inline_asm
